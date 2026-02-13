@@ -1,12 +1,42 @@
-import { useRef, useEffect, useMemo, Suspense } from 'react';
+import { useRef, useEffect, useMemo, useState, Component, type ReactNode } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
-import { Text, useTexture } from '@react-three/drei';
+import { Text } from '@react-three/drei';
 import { trailPhotos, trailMessages, themeConfig } from '../config/trailConfig';
 
-/** Inner component that loads the texture */
+/** Error boundary so a single failed image doesn't break the whole trail */
+class MediaErrorBoundary extends Component<
+  { children: ReactNode; fallback: ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  render() {
+    return this.state.hasError ? this.props.fallback : this.props.children;
+  }
+}
+
+/** Inner component that loads the texture manually */
 function PhotoImage({ imageUrl }: { imageUrl: string }) {
-  const texture = useTexture(imageUrl);
+  const [texture, setTexture] = useState<THREE.Texture | null>(null);
+
+  useEffect(() => {
+    const loader = new THREE.TextureLoader();
+    loader.load(
+      imageUrl,
+      (tex) => setTexture(tex),
+      undefined,
+      (err) => console.warn('Failed to load texture:', imageUrl, err)
+    );
+    return () => {
+      texture?.dispose();
+    };
+  }, [imageUrl]);
+
+  if (!texture) return <PhotoPlaceholder />;
+
   return (
     <mesh position={[0, 0.05, -0.06]}>
       <planeGeometry args={[1.9, 1.4]} />
@@ -108,14 +138,14 @@ function PhotoFrame({
         <boxGeometry args={[2.2, 1.8, 0.1]} />
         <meshStandardMaterial color={themeConfig.frameColor} />
       </mesh>
-      {/* Photo or Video with Suspense fallback */}
-      <Suspense fallback={<PhotoPlaceholder />}>
+      {/* Photo or Video */}
+      <MediaErrorBoundary fallback={<PhotoPlaceholder />}>
         {type === 'video' ? (
           <VideoMedia videoUrl={imageUrl} />
         ) : (
           <PhotoImage imageUrl={imageUrl} />
         )}
-      </Suspense>
+      </MediaErrorBoundary>
       {/* Caption */}
       <Text
         position={[0, -1.2, 0]}

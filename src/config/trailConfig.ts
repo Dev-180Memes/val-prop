@@ -163,7 +163,7 @@ export const proposalConfig = {
 // Customize the handwritten letter shown after the celebration.
 export const letterConfig = {
   /** Greeting at the top */
-  greeting: 'My Dearest,',
+  greeting: 'Ayanfe,',
 
   /** The body paragraphs of the letter. Each string is a separate paragraph. */
   paragraphs: [
@@ -178,7 +178,7 @@ export const letterConfig = {
   closing: 'Forever yours,',
 
   /** Your name */
-  signature: '— Your Love 🐾',
+  signature: '— Adeoluwa 🐾',
 
   /** Date on the letter */
   date: 'February 14, 2025',

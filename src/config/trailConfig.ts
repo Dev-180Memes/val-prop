@@ -181,7 +181,7 @@ export const letterConfig = {
   signature: '— Adeoluwa 🐾',
 
   /** Date on the letter */
-  date: 'February 14, 2025',
+  date: 'February 14, 2026',
 };
 
 // ---- THEME / COLORS ----

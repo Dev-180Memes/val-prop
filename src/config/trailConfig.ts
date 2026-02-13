@@ -5,7 +5,7 @@
 
 export interface TrailPhoto {
   id: string;
-  /** URL to image (local or remote). Replace placeholders with your own. */
+  /** URL to image or video (local or remote). Replace placeholders with your own. */
   imageUrl: string;
   /** Caption shown below the photo frame */
   caption: string;
@@ -13,6 +13,8 @@ export interface TrailPhoto {
   zPosition: number;
   /** Which side of the trail: 'left' | 'right' */
   side: 'left' | 'right';
+  /** Media type: 'image' (default) or 'video'. Videos loop endlessly. */
+  type?: 'image' | 'video';
 }
 
 export interface TrailMessage {
@@ -26,77 +28,79 @@ export interface TrailMessage {
 }
 
 // ---- PHOTOS ALONG THE TRAIL ----
-// Replace imageUrl with your own photo URLs or local paths in /public/photos/
+// Replace imageUrl with your own photo URLs or local paths in /photos/
 export const trailPhotos: TrailPhoto[] = [
   {
     id: 'photo-1',
-    imageUrl: 'https://placehold.co/400x300/ff69b4/white?text=Our+First+Date',
+    imageUrl: '/photos/10.JPG',
     caption: 'Our first date 💕',
     zPosition: -15,
     side: 'left',
   },
   {
     id: 'photo-2',
-    imageUrl: 'https://placehold.co/400x300/ff1493/white?text=First+Trip',
-    caption: 'Our first trip together ✈️',
+    imageUrl: '/photos/2.JPG',
+    caption: 'Up ManU',
     zPosition: -30,
     side: 'right',
   },
   {
     id: 'photo-3',
-    imageUrl: 'https://placehold.co/400x300/ff6347/white?text=Movie+Night',
-    caption: 'That movie night 🎬',
+    imageUrl: '/photos/4.JPG',
+    caption: 'I see this when i check the time 🕒',
     zPosition: -45,
     side: 'left',
   },
   {
     id: 'photo-4',
-    imageUrl: 'https://placehold.co/400x300/dc143c/white?text=Beach+Day',
-    caption: 'Beach day! 🏖️',
+    imageUrl: '/photos/5.JPG',
+    caption: 'Just You',
     zPosition: -60,
     side: 'right',
   },
   {
     id: 'photo-5',
-    imageUrl: 'https://placehold.co/400x300/ff69b4/white?text=Anniversary',
-    caption: 'Happy anniversary 🥂',
+    imageUrl: '/photos/6.JPG',
+    caption: 'My favourite picture 🥂',
     zPosition: -75,
     side: 'left',
   },
   {
     id: 'photo-6',
-    imageUrl: 'https://placehold.co/400x300/ff1493/white?text=Cooking+Together',
-    caption: 'Cooking disasters 👩‍🍳',
+    imageUrl: '/photos/7.JPG',
+    caption: 'Chef Dessie 👩‍🍳',
     zPosition: -90,
     side: 'right',
   },
   {
     id: 'photo-7',
-    imageUrl: 'https://placehold.co/400x300/ff6347/white?text=Sunset',
-    caption: 'That perfect sunset 🌅',
+    imageUrl: '/photos/8.JPG',
+    caption: 'Just you again 🌅',
     zPosition: -105,
     side: 'left',
   },
   {
     id: 'photo-8',
-    imageUrl: 'https://placehold.co/400x300/dc143c/white?text=Christmas',
-    caption: 'Our first Christmas 🎄',
+    imageUrl: '/photos/1.MP4',
+    caption: 'I love you',
     zPosition: -120,
     side: 'right',
+    type: 'video',
   },
   {
     id: 'photo-9',
-    imageUrl: 'https://placehold.co/400x300/ff69b4/white?text=Hiking',
-    caption: 'Mountain adventures 🏔️',
+    imageUrl: '/photos/9.JPG',
+    caption: 'Just you again',
     zPosition: -135,
     side: 'left',
   },
   {
     id: 'photo-10',
-    imageUrl: 'https://placehold.co/400x300/ff1493/white?text=Us+%E2%9D%A4',
+    imageUrl: '/photos/3.MP4',
     caption: 'Just us ❤️',
     zPosition: -150,
     side: 'right',
+    type: 'video',
   },
 ];
 

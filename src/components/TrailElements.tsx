@@ -1,4 +1,4 @@
-import { useRef, Suspense } from 'react';
+import { useRef, useEffect, useMemo, Suspense } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { Text, useTexture } from '@react-three/drei';
@@ -25,17 +25,55 @@ function PhotoPlaceholder() {
   );
 }
 
+/** Inner component that plays a looping video as a texture */
+function VideoMedia({ videoUrl }: { videoUrl: string }) {
+  const video = useMemo(() => {
+    const el = document.createElement('video');
+    el.src = videoUrl;
+    el.crossOrigin = 'anonymous';
+    el.loop = true;
+    el.muted = true;
+    el.playsInline = true;
+    el.play();
+    return el;
+  }, [videoUrl]);
+
+  const texture = useMemo(() => {
+    const tex = new THREE.VideoTexture(video);
+    tex.minFilter = THREE.LinearFilter;
+    tex.magFilter = THREE.LinearFilter;
+    return tex;
+  }, [video]);
+
+  useEffect(() => {
+    return () => {
+      video.pause();
+      video.src = '';
+      texture.dispose();
+    };
+  }, [video, texture]);
+
+  return (
+    <mesh position={[0, 0.05, -0.06]}>
+      <planeGeometry args={[1.9, 1.4]} />
+      <meshStandardMaterial map={texture} toneMapped={false} />
+    </mesh>
+  );
+}
+
 /** A floating photo frame along the trail */
 function PhotoFrame({
   imageUrl,
   caption,
   position,
   dogZ,
+  type = 'image',
 }: {
   imageUrl: string;
   caption: string;
   position: [number, number, number];
   dogZ: number;
+  type?: 'image' | 'video';
 }) {
   const groupRef = useRef<THREE.Group>(null);
 
@@ -70,9 +108,13 @@ function PhotoFrame({
         <boxGeometry args={[2.2, 1.8, 0.1]} />
         <meshStandardMaterial color={themeConfig.frameColor} />
       </mesh>
-      {/* Photo with Suspense fallback */}
+      {/* Photo or Video with Suspense fallback */}
       <Suspense fallback={<PhotoPlaceholder />}>
-        <PhotoImage imageUrl={imageUrl} />
+        {type === 'video' ? (
+          <VideoMedia videoUrl={imageUrl} />
+        ) : (
+          <PhotoImage imageUrl={imageUrl} />
+        )}
       </Suspense>
       {/* Caption */}
       <Text
@@ -169,6 +211,7 @@ export default function TrailElements({ dogZ }: { dogZ: number }) {
             caption={photo.caption}
             position={[x, 1.8, photo.zPosition]}
             dogZ={dogZ}
+            type={photo.type}
           />
         );
       })}
